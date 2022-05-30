@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const StateContext = createContext();
 
@@ -23,22 +23,34 @@ export const ContextProvider = ({ children }) => {
   const setMode = (e) => {
     setCurrentMode(e.target.value);
 
-    setThemeSettings(false);
+    //  setThemeSettings(false);
     localStorage.setItem("themeMode", e.target.value);
   };
   const setColor = (color) => {
     setCurrentColor(color);
 
-    setThemeSettings(false);
+    // setThemeSettings(false);
     localStorage.setItem("colorMode", color);
   };
 
+  useEffect(() => {
+    const initTheme = localStorage.getItem("themeMode");
+    const initColor = localStorage.getItem("colorMode");
+    if (initTheme) setCurrentMode(initTheme);
+    if (initColor) setCurrentColor(initColor);
+  }, []);
+
   const handleClick = (clicked) => {
-    setIsClicked({ ...initilialState, [clicked]: true });
+    if (isClicked[clicked]) {
+      setIsClicked(initilialState);
+    } else {
+      setIsClicked({ ...initilialState, [clicked]: true });
+    }
   };
   return (
     <StateContext.Provider
       value={{
+        initilialState,
         activeMenu,
         setActiveMenu,
         isClicked,
